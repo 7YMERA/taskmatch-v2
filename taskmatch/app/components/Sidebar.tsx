@@ -71,6 +71,12 @@ export default function Sidebar() {
     ...(can(role, 'team.manage') ? [{ label: 'Members & roles', href: '/team', icon: 'shield' as const }] : []),
     ...(can(role, 'audit.view') ? [{ label: 'Audit trail', href: '/audit', icon: 'history' as const }] : []),
   ]
+  const dock = [
+    { short: 'Home', href: '/dashboard', icon: 'grid' as const },
+    { short: 'People', href: '/people', icon: 'users' as const },
+    { short: 'Match', href: '/match', icon: 'target' as const },
+    { short: 'Tasks', href: '/tasks', icon: 'check' as const },
+  ]
   const previewing = real === 'admin' && !!getRoleOverride() && role !== real
 
   const navLink = (item: { label: string; href: string; icon: IconName }) => {
@@ -192,13 +198,27 @@ export default function Sidebar() {
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center gap-3 px-4 h-14"
         style={{ background: 'var(--tm-bg-sidebar)', borderBottom: '1px solid var(--tm-border)' }}>
-        <button onClick={() => setOpen(true)} aria-label="Open menu" style={{ color: 'var(--tm-text)' }}><Icon name="menu" /></button>
-        <Logo size={24} />
+        <Link href="/dashboard" className="flex items-center"><Logo size={24} /></Link>
         <div className="ml-auto flex items-center gap-1">
           <button onClick={openPalette} aria-label="Search" title="Search" className="tm-btn tm-btn-quiet tm-btn-icon"><Icon name="search" size={16} /></button>
           <NotificationBell /><ThemeToggle />
         </div>
       </div>
+
+      {/* Phone dock: the main pages one tap away; "More" opens the full menu */}
+      <nav className="tm-dock md:hidden" aria-label="Main">
+        {dock.map(item => {
+          const on = pathname === item.href || pathname.startsWith(item.href + '/')
+          return (
+            <Link key={item.href} href={item.href} aria-current={on ? 'page' : undefined}>
+              <Icon name={item.icon} size={20} />{item.short}
+            </Link>
+          )
+        })}
+        <button onClick={() => setOpen(true)} aria-label="Open the full menu" aria-expanded={open}>
+          <Icon name="menu" size={20} />More
+        </button>
+      </nav>
 
       {/* Desktop sidebar */}
       <div className="hidden md:block sticky top-0 self-start">{panel}</div>

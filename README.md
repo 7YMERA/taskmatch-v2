@@ -62,7 +62,7 @@ of real teams and, one day, offering as a product.
 | **Abuse protection** | None | Per-IP rate limiting, locked-down CORS, typed request validation |
 | **Errors** | Raw 500s | Handled globally with clean responses |
 | **Tests and CI** | None | pytest suite (matcher, security, assignment modes) and GitHub Actions on every push and PR |
-| **Look and feel** | Six-colour palette; white-on-white text in light mode | Neutral base with one indigo accent, per-theme tokens, Geist type, theme follows your OS |
+| **Look and feel** | Six-colour palette; white-on-white text in light mode | Indigo-tinted neutrals with the logo's amber as a second accent, per-theme tokens checked for contrast, a display face for headings, theme follows your OS |
 | **Dashboard** | Totals at one point in time | Date ranges, KPI trends with sparklines, "needs attention", matching health, workload heatmap, skills coverage |
 | **Assigning work** | Pick a person from a ranked list | Also auto-assign by best match, round robin or least loaded, previewed with the reason before confirming |
 | **Finding the right person** | Only from inside one task | A **Find a match** page in the sidebar: describe the work or pick a task, see everyone ranked with reasons |
@@ -96,6 +96,7 @@ Each release has a full write-up with before/after screenshots in light and dark
 | API on Vercel | The API moves from Render into the same Vercel project as the site, under `/api`: no 50-second wake-up, one domain, one place for settings | [#31](https://github.com/7YMERA/taskmatch-v2/pull/31) | [Changelog](https://github.com/7YMERA/taskmatch-v2/wiki/Changelog#api-on-vercel) |
 | Try the demo, no login | One click on the landing or login page (or a `/demo` link) opens the demo team as a team lead. The sign-in happens on the server, so no demo password is in the page | [#35](https://github.com/7YMERA/taskmatch-v2/pull/35) | [Changelog](https://github.com/7YMERA/taskmatch-v2/wiki/Changelog#try-the-demo-no-login) |
 
+| Portfolio-inspired look | Ideas from the owner's [portfolio site](https://7ymera.github.io/): tinted neutrals and an amber second accent, Bricolage Grotesque headings with mono labels, joined numbers strips, a cursor glow on cards, a dot-grid and colour-wash hero with a word-by-word headline, a drag-to-compare v1 vs v2 slider on the landing page, filter pills with counts on Tasks and People, and a bottom dock on phones | this PR | [Changelog](https://github.com/7YMERA/taskmatch-v2/wiki/Changelog#portfolio-inspired-look) |
 | People and Find a match | Students becomes People at `/people` (old links redirect); Find a match gets its own page and sidebar entry | [#33](https://github.com/7YMERA/taskmatch-v2/pull/33) | [Changelog](https://github.com/7YMERA/taskmatch-v2/wiki/Changelog#people-page-and-find-a-match) |
 
 **v1 (the FYP) vs today**, on the same demo team. Every page, in both themes: **[v1 vs Now](https://github.com/7YMERA/taskmatch-v2/wiki/v1-vs-Now)**.
