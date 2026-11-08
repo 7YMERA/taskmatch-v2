@@ -276,7 +276,7 @@ export default function Dashboard() {
 
         {tab === 'overview' && (<>
         {/* KPIs with change vs the previous period */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="tm-strip grid-cols-2 lg:grid-cols-4 mb-6">
           <TrendTile label="Tasks completed" value={loading ? '…' : kDone} href="/tasks?status=Completed"
             change={prev ? delta(kDone, tasksCompleted(tasks, prev)) : null}
             sub={prev ? `${rangeLabel} · ${vsLabel}` : rangeLabel}
@@ -379,7 +379,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Lifecycle status breakdown — each card opens the Tasks page pre-filtered */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+        <div className="tm-strip grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 mb-6">
           {[
             { label: 'New', value: newCount, accent: 'amber' as const, sub: 'awaiting assignment', filter: 'New' },
             { label: 'Ongoing', value: ongoingCount, accent: 'emerald' as const, sub: 'in progress', filter: 'In Progress' },
@@ -395,7 +395,7 @@ export default function Dashboard() {
         </>)}
 
         {tab === 'workload' && (<>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="tm-strip grid-cols-2 lg:grid-cols-4 mb-6">
           <TrendTile label="Active tasks per person" value={loading ? '…' : (avgActive == null ? '—' : avgActive.toFixed(1))}
             change={delta(weeklyLoad[weeklyLoad.length - 1], weeklyLoad[weeklyLoad.length - 2])} goodWhen="down"
             sub="this week vs last week" spark={weeklyLoad} />
@@ -460,7 +460,7 @@ export default function Dashboard() {
         </>)}
 
         {tab === 'skills' && (<>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="tm-strip grid-cols-2 lg:grid-cols-4 mb-6">
           <StatTile label="Skill gaps" value={loading ? '…' : coverage.filter(c => c.risk === 'gap').length} accent="rose" sub="needed, nobody at Intermediate+" />
           <StatTile label="Thin skills" value={loading ? '…' : coverage.filter(c => c.risk === 'thin').length} accent="amber" sub="fewer people than open tasks" />
           <StatTile label="Covered" value={loading ? '…' : coverage.filter(c => c.risk === 'ok').length} accent="emerald" sub="enough people for the work" />
@@ -599,7 +599,7 @@ export default function Dashboard() {
         ) : (
           <>
             {/* Student personal snapshot — no other students' scores */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="tm-strip grid-cols-2 lg:grid-cols-4 mb-6">
               {[
                 { label: 'My active tasks', value: `${myActive}`, sub: `of ${wipLimit} WIP limit`, accent: (myActive >= wipLimit ? 'rose' as const : 'indigo' as const) },
                 { label: 'Completed', value: `${myDone.length}`, sub: 'tasks done', accent: 'sky' as const },
