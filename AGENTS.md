@@ -1,8 +1,13 @@
 # Working on this repo (Claude and Kiro)
 
 Two assistants work here: Claude (cloud and the personal laptop) and Kiro (KiroCrew, on the work
-laptop). Read the [Claude notes](https://github.com/7YMERA/taskmatch-v2/wiki/Claude-Notes) and
-[Kiro notes](https://github.com/7YMERA/taskmatch-v2/wiki/Kiro-Notes) on the Wiki before starting.
+laptop).
+
+**Start with [`AGENT-CORNER.md`](AGENT-CORNER.md).** It is the shared handoff log for both assistants:
+current state, what the last agent left unfinished, a map of the code, decisions, gotchas and a
+one-line-per-PR log. Read it before anything else and open only the files your task needs. Go to the [Claude notes](https://github.com/7YMERA/taskmatch-v2/wiki/Claude-Notes)
+and [Kiro notes](https://github.com/7YMERA/taskmatch-v2/wiki/Kiro-Notes) on the Wiki only when you
+need the longer history.
 
 ## Branches and Vercel previews
 
@@ -32,6 +37,8 @@ and Vercel can't match them to the owner.
 
 ## Every pull request
 
+- Update `AGENT-CORNER.md`: one line at the top of its log, a fresh Handoff section, and fix any
+  state, map, decision or gotcha your change made wrong. Keep it short.
 - Update `README.md`.
 - Add an entry at the top of the Wiki **Changelog** (light and dark screenshots when the UI changes;
   "before" is always v1, the FYP in `7YMERA/taskmatch-git`).
