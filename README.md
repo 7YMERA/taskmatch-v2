@@ -62,7 +62,7 @@ of real teams and, one day, offering as a product.
 | **Abuse protection** | None | Per-IP rate limiting, locked-down CORS, typed request validation |
 | **Errors** | Raw 500s | Handled globally with clean responses |
 | **Tests and CI** | None | pytest suite (matcher, security, assignment modes) and GitHub Actions on every push and PR |
-| **Look and feel** | Six-colour palette; white-on-white text in light mode | Neutral base with one indigo accent, per-theme tokens, Geist type, theme follows your OS |
+| **Look and feel** | Six-colour palette; white-on-white text in light mode | Indigo-tinted neutrals with the logo's amber as a second accent, per-theme tokens checked for contrast, a display face for headings, theme follows your OS |
 | **Dashboard** | Totals at one point in time | Date ranges, KPI trends with sparklines, "needs attention", matching health, workload heatmap, skills coverage |
 | **Assigning work** | Pick a person from a ranked list | Also auto-assign by best match, round robin or least loaded, previewed with the reason before confirming |
 | **Finding the right person** | Only from inside one task | A **Find a match** page in the sidebar: describe the work or pick a task, see everyone ranked with reasons |
@@ -96,6 +96,7 @@ Each release has a full write-up with before/after screenshots in light and dark
 | API on Vercel | The API moves from Render into the same Vercel project as the site, under `/api`: no 50-second wake-up, one domain, one place for settings | [#31](https://github.com/7YMERA/taskmatch-v2/pull/31) | [Changelog](https://github.com/7YMERA/taskmatch-v2/wiki/Changelog#api-on-vercel) |
 | Try the demo, no login | One click on the landing or login page (or a `/demo` link) opens the demo team as a team lead. The sign-in happens on the server, so no demo password is in the page | [#35](https://github.com/7YMERA/taskmatch-v2/pull/35) | [Changelog](https://github.com/7YMERA/taskmatch-v2/wiki/Changelog#try-the-demo-no-login) |
 
+| Portfolio-inspired look | Ideas from the owner's [portfolio site](https://7ymera.github.io/): tinted neutrals and an amber second accent, Bricolage Grotesque headings with mono labels, joined numbers strips, a cursor glow on cards, a dot-grid and colour-wash hero with a word-by-word headline, a drag-to-compare v1 vs v2 slider on the landing page, filter pills with counts on Tasks and People, and a bottom dock on phones | [#37](https://github.com/7YMERA/taskmatch-v2/pull/37) | [Changelog](https://github.com/7YMERA/taskmatch-v2/wiki/Changelog#portfolio-inspired-look) |
 | People and Find a match | Students becomes People at `/people` (old links redirect); Find a match gets its own page and sidebar entry | [#33](https://github.com/7YMERA/taskmatch-v2/pull/33) | [Changelog](https://github.com/7YMERA/taskmatch-v2/wiki/Changelog#people-page-and-find-a-match) |
 
 **v1 (the FYP) vs today**, on the same demo team. Every page, in both themes: **[v1 vs Now](https://github.com/7YMERA/taskmatch-v2/wiki/v1-vs-Now)**.
@@ -162,6 +163,7 @@ supabase/         Database scripts, run in order (see "The database" below)
 vercel.json       Vercel setup: the site and the API as two services in one project
 AGENTS.md         Working rules for the two AI assistants (branches, Wiki, commit identity, no secrets)
 AGENT-CORNER.md   Shared handoff log Claude and Kiro read first: state, unfinished work, code map, decisions
+.mcp.json         Design and docs MCP servers for AI coding sessions (see "MCP servers for AI sessions")
 ```
 
 Release write-ups, screenshots, the roadmap and the assistants' notes live on the
@@ -249,6 +251,23 @@ Set `NEXT_PUBLIC_API_URL=/api` there, plus the API's variables. Details are in
 Only `main` deploys. Vercel reads `vercel.json` from the branch being pushed, so a branch that
 lacks it (an old branch, or one holding Wiki pages) builds a preview that fails on the Hobby plan
 and emails the owner. Start every branch from the latest `main`; the rules are in [AGENTS.md](AGENTS.md).
+
+### MCP servers for AI sessions
+
+[`.mcp.json`](.mcp.json) at the repo root lists four [MCP](https://modelcontextprotocol.io) servers.
+They load automatically when a Claude Code session starts in this repo (the first time, Claude
+Code asks you to approve them once). Each one runs through `npx`, so Node.js is all you need; no
+API keys are stored in the file. They are only tools for the assistant and change nothing in the app.
+
+| Server | Command | What it's for |
+|---|---|---|
+| `shadcn` | `npx -y shadcn@latest mcp` | Browse and add [shadcn/ui](https://ui.shadcn.com) components and blocks when designing new UI. |
+| `magicui` | `npx -y @magicuidesign/mcp@latest` | Look up [Magic UI](https://magicui.design) animated components (backgrounds, text effects, marquees) for landing and marketing pages. |
+| `playwright` | `npx -y @playwright/mcp@latest --headless --isolated` | Drive a headless browser to open the app, click through pages and take light and dark screenshots for the Wiki. `--isolated` starts each session with a fresh profile, so no logins are kept. |
+| `context7` | `npx -y @upstash/context7-mcp@latest` | Pull current, version-specific library docs (Next.js 16, React 19, Tailwind v4, FastAPI, Supabase) so code follows today's APIs, not older ones. |
+
+Anything taken from shadcn or Magic UI still has to follow the house rules: the colours and
+outline icons in `taskmatch/app/components/ui.tsx`, and no emoji in the product UI.
 
 ### Tests
 

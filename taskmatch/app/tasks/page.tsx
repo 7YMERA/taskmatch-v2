@@ -26,6 +26,11 @@ const GROUP_COLORS = ['#a78bfa', '#34d399', '#38bdf8', '#fbbf24', '#fb7185', '#2
 type View = 'list' | 'board' | 'calendar'
 type Sort = 'due' | 'severity' | 'status' | 'name'
 // Quick views: one click to the slices a lead looks at most.
+// Status filter pills: key, label, colour dot (per-theme tokens, so readable in both themes)
+const STATUS_PILLS: [string, string, string | null][] = [
+  ['all', 'All', null], ['New', 'New', 'var(--tm-amber)'], ['In Progress', 'Ongoing', 'var(--tm-emerald)'],
+  ['Completed', 'Completed', 'var(--tm-sky)'], ['Late', 'Late', 'var(--tm-violet)'], ['Delayed', 'Delayed', 'var(--tm-rose)'], ['Closed', 'Closed', 'var(--tm-neutral)'],
+]
 const PRESETS = [
   { key: 'all', label: 'All tasks' },
   { key: 'unassigned', label: 'Needs people' },
@@ -367,12 +372,13 @@ const updateTaskStatus = async (id: string, status: string) => {
   const activeOn = (t: any) => (allAssignees[t.id] || []).filter(a => a.status === 'Assigned' || a.status === 'In Progress')
   const isUnstaffed = (t: any) => t.status !== 'Completed' && !isClosed(t) && activeOn(t).length === 0
   const [weekAhead] = useState(() => new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10))
-  const matchesPreset = (t: any) =>
-    preset === 'unassigned' ? isUnstaffed(t)
-      : preset === 'due-week' ? t.status !== 'Completed' && !!t.due_date && t.due_date >= todayStr && t.due_date <= weekAhead
-        : preset === 'overdue' ? t.status !== 'Completed' && !!t.due_date && t.due_date < todayStr
-          : preset === 'critical' ? t.status !== 'Completed' && t.severity === 'Critical'
+  const presetOk = (p: string, t: any) =>
+    p === 'unassigned' ? isUnstaffed(t)
+      : p === 'due-week' ? t.status !== 'Completed' && !!t.due_date && t.due_date >= todayStr && t.due_date <= weekAhead
+        : p === 'overdue' ? t.status !== 'Completed' && !!t.due_date && t.due_date < todayStr
+          : p === 'critical' ? t.status !== 'Completed' && t.severity === 'Critical'
             : true
+  const matchesPreset = (t: any) => presetOk(preset, t)
   const needle = query.trim().toLowerCase()
   const matchesQuery = (t: any) => !needle
     || (t.description || '').toLowerCase().includes(needle)
@@ -389,15 +395,16 @@ const updateTaskStatus = async (id: string, status: string) => {
     : groupFilter === '__none__'
       ? byProject.filter(t => !t.group_label)
       : byProject.filter(t => t.group_label === groupFilter)
-  const shownTasks = byGroup.filter(t => {
-    const statusOk = statusFilter === 'all' ? true
-      : statusFilter === 'Delayed' ? isDelayed(t)
-        : statusFilter === 'Closed' ? isClosed(t)
-          : statusFilter === 'Late' ? isLate(t)
-            : t.status === statusFilter
-    const sevOk = severityFilter === 'all' || t.severity === severityFilter
-    return statusOk && sevOk && matchesQuery(t) && matchesPreset(t)
-  }).sort((a, b) => {
+  const statusOk = (st: string, t: any) => st === 'all' ? true
+    : st === 'Delayed' ? isDelayed(t)
+      : st === 'Closed' ? isClosed(t)
+        : st === 'Late' ? isLate(t)
+          : t.status === st
+  const sevOk = (t: any) => severityFilter === 'all' || t.severity === severityFilter
+  // Each pill counts what you'd see if you picked it, with every other filter kept.
+  const statusCount = (st: string) => byGroup.filter(t => statusOk(st, t) && sevOk(t) && matchesQuery(t) && matchesPreset(t)).length
+  const presetCount = (p: string) => byGroup.filter(t => statusOk(statusFilter, t) && sevOk(t) && matchesQuery(t) && presetOk(p, t)).length
+  const shownTasks = byGroup.filter(t => statusOk(statusFilter, t) && sevOk(t) && matchesQuery(t) && matchesPreset(t)).sort((a, b) => {
     if (sort === 'name') return (a.description || '').localeCompare(b.description || '')
     if (sort === 'severity') return (SEV_RANK[a.severity] ?? 3) - (SEV_RANK[b.severity] ?? 3) || (a.due_date || '9').localeCompare(b.due_date || '9')
     if (sort === 'status') return (STATUS_RANK[a.status] ?? 3) - (STATUS_RANK[b.status] ?? 3) || (a.due_date || '9').localeCompare(b.due_date || '9')
@@ -634,14 +641,9 @@ const updateTaskStatus = async (id: string, status: string) => {
         {/* Quick views + saved views */}
         <div className="flex flex-wrap items-center gap-2 mb-3">
           {PRESETS.map(p => (
-            <button key={p.key} onClick={() => setPreset(p.key)} aria-pressed={preset === p.key}
-              className="text-xs px-3 py-1.5 rounded-full border transition"
-              style={preset === p.key
-                ? { borderColor: 'var(--tm-primary)', background: 'var(--tm-primary-soft)', color: 'var(--tm-primary-text)' }
-                : { borderColor: 'var(--tm-border)', color: 'var(--tm-text-muted)' }}>
+            <button key={p.key} onClick={() => setPreset(p.key)} aria-pressed={preset === p.key} className="tm-pill">
               {p.label}
-              {p.key === 'unassigned' && counts.unassigned > 0 && <span className="ml-1.5 tabular-nums">{counts.unassigned}</span>}
-              {p.key === 'overdue' && counts.overdue > 0 && <span className="ml-1.5 tabular-nums">{counts.overdue}</span>}
+              {!loading && <span className="n">{presetCount(p.key)}</span>}
             </button>
           ))}
           {savedViews.length > 0 && <div className="w-px h-5 mx-1" style={{ background: 'var(--tm-border)' }} />}
@@ -663,17 +665,16 @@ const updateTaskStatus = async (id: string, status: string) => {
 
         {/* Status + Group filters */}
         <div className="flex gap-3 mb-4 flex-wrap items-center">
-          <div className="flex items-center gap-2">
-            <span className="text-xs" style={FAINT}>Status</span>
-            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="tm-select-sm">
-              <option value="all">All</option>
-              <option value="New">New</option>
-              <option value="In Progress">Ongoing</option>
-              <option value="Completed">Completed</option>
-              <option value="Late">Completed · Late</option>
-              <option value="Delayed">Delayed</option>
-              <option value="Closed">Closed</option>
-            </select>
+          <div className="flex items-center gap-2 max-w-full overflow-x-auto">
+            <span className="text-xs shrink-0" style={FAINT}>Status</span>
+            <div className="tm-pills !flex-nowrap" role="group" aria-label="Filter by status">
+              {STATUS_PILLS.map(([k, label, c]) => (
+                <button key={k} onClick={() => setStatusFilter(k)} aria-pressed={statusFilter === k} className="tm-pill">
+                  {c && <span className="dot" style={{ background: c }} />}{label}
+                  {!loading && <span className="n">{statusCount(k)}</span>}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs" style={FAINT}>Severity</span>
@@ -942,7 +943,7 @@ const updateTaskStatus = async (id: string, status: string) => {
         </div>
         {/* Bulk actions — appears once tasks are ticked */}
         {can(userRole, 'tasks.manage') && view === 'list' && selected.length > 0 && (
-          <div className="sticky bottom-4 z-40 mt-4 flex justify-center pointer-events-none">
+          <div className="sticky bottom-24 md:bottom-4 z-40 mt-4 flex justify-center pointer-events-none">
             <div className="pointer-events-auto flex flex-wrap items-center gap-2 rounded-xl px-3 py-2"
               style={{ background: 'var(--tm-surface-1)', border: '1px solid var(--tm-border)', boxShadow: 'var(--tm-shadow)' }}>
               <span className="text-sm font-medium px-1" style={TEXT}>{selected.length} selected</span>

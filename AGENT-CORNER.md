@@ -11,17 +11,18 @@ logins here.
 ## Current state (2026-11-08)
 
 - Live: https://taskmatch-umber.vercel.app (site at `/`, API at `/api`, one Vercel project, deploys from `main` only).
-- `main` has everything up to PR #35 (Try the demo, no login) and #33 (People page + Find a match).
-- Open PRs: **#36** `.mcp.json` (shadcn, magicui, playwright, context7 MCP servers for Claude Code);
-  **#37** portfolio-inspired look (warm amber second accent, tinted neutrals, Bricolage display font,
-  numbers strips, cursor glow, v1/v2 slider, phone dock).
+- `main` has everything up to PR #37: portfolio-inspired look (amber second accent, tinted neutrals,
+  Bricolage display font, numbers strips, cursor glow, v1/v2 slider, phone dock) and #36 `.mcp.json`
+  (shadcn, magicui, playwright, context7 MCP servers for Claude Code).
+- Open PRs: **#38** (this agent corner).
 - Shelved: the Claude AI assist feature (`taskmatch-api/ai.py`, `AISuggest.tsx`). Don't build on it.
 
 ## Handoff (next agent starts here)
 
 What the last agent left half-done or queued. Replace it, don't append to it.
 
-- Nothing in progress. Review and merge order for open PRs: #36, #37, then #38.
+- Nothing in progress. Suggested from #37: refresh `public/compare/*-v2.webp` with new shots; use
+  `--tm-warm` for due-soon markers in the app.
 
 ## Owner to-dos (not code)
 
@@ -36,6 +37,8 @@ What the last agent left half-done or queued. Replace it, don't append to it.
 | `taskmatch/app/<page>/` | One folder per route: dashboard, tasks, people (was students), match, my-tasks, projects, team, audit, approvals, integrations, settings, onboarding, demo, join, login, signup, logs, profile. |
 | `taskmatch/app/components/ui.tsx` | Design system primitives + outline `Icon` set. Use these; no emoji in UI. |
 | `taskmatch/app/globals.css` | `tm-*` colour tokens; light theme via `<html data-theme="light">`. |
+| `taskmatch/app/components/CursorGlow.tsx`, `BeforeAfter.tsx` | Card cursor glow; landing v1/v2 slider (images in `public/compare/`). |
+| `.mcp.json` | MCP servers for Claude Code sessions (shadcn, magicui, playwright, context7). |
 | `taskmatch/app/lib/supabase.ts` | Shared Supabase client, `API` base URL, `authHeaders()`. |
 | `taskmatch/app/lib/permissions.json` | Role permissions (frontend copy). |
 | `taskmatch-api/main.py` | FastAPI app, all endpoints (~2.5k lines). `ROLE_PERMISSIONS`, `WORKSPACE_TABLES`. |
@@ -60,7 +63,7 @@ cd taskmatch && npx tsc --noEmit && npm run lint  # frontend
 - Try the demo signs in a shared visitor as **team lead** server-side (`POST /demo/start`). Never admin.
 - `/students` routes moved to `/people` (redirects in `next.config.ts`); DB table and API still say `students`.
 - Before/after comparisons always use **v1** (the FYP, `7YMERA/taskmatch-git`, v2 commit `7fb3bc1`) as "before".
-- Design direction: neutral base, indigo accent (+ amber second accent if #37 merges), both themes must work.
+- Design direction: tinted neutral base, indigo brand accent + amber `--tm-warm` second accent, both themes must work.
 - Docs live on the Wiki, not in a `docs/` folder.
 
 ## Gotchas
@@ -79,7 +82,7 @@ cd taskmatch && npx tsc --noEmit && npm run lint  # frontend
 |---|---|---|
 | Runs on | Cloud sessions and the personal laptop | KiroCrew on the work laptop |
 | Reads rules from | `CLAUDE.md` (includes `AGENTS.md`) | `.kiro/steering/repo-rules.md` (points to `AGENTS.md`) |
-| Extra tools | `.mcp.json` servers (once #36 merges) | Own `.kiro/settings`; doesn't get `.mcp.json` |
+| Extra tools | `.mcp.json` servers | Own `.kiro/settings`; doesn't get `.mcp.json` |
 | Commit as | `7YMERA` no-reply address, set per repo | Same, set per repo only (never globally on the work laptop) |
 
 If you pick up work the other agent started, read its last log line and the Handoff section, then
@@ -90,8 +93,8 @@ its branch's commits, before changing anything.
 | Date | PR | Who | What |
 |---|---|---|---|
 | 2026-11-08 | #38 | Claude | Added this agent corner; AGENTS.md and Kiro's steering say read it first and update it last. |
-| 2026-11-07 | #37 | Claude | Portfolio-inspired restyle (open). |
-| 2026-10-29 | #36 | Claude | Root `.mcp.json` for Claude Code sessions (open). |
+| 2026-11-07 | #37 | Claude | Portfolio-inspired restyle. |
+| 2026-10-29 | #36 | Claude | Root `.mcp.json` for Claude Code sessions. |
 | 2026-10-27 | #35 | Claude | Try the demo with no login. |
 | 2026-10-27 | #34 | Claude | AGENTS.md rules; root `vercel.json` stops branch previews. |
 | 2026-10-27 | #33 | Claude | Students to People; Find a match page at `/match`. |

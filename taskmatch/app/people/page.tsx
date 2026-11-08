@@ -358,18 +358,23 @@ export default function People() {
   const levelOf = (s: any, skillId: string) => (s.student_skills || []).find((ss: any) => ss.skill_id === skillId)?.proficiency || 0
   const wipOf = (s: any) => wip[s.id]?.wip ?? 0
   const needle = query.trim().toLowerCase()
-  const searched = filteredStudents.filter(s => {
+  const availOk = (a: Avail, s: any) =>
+    a === 'free' ? wipOf(s) === 0 && !isAway(s)
+      : a === 'room' ? wipOf(s) < wipLimit && !isAway(s)
+        : a === 'away' ? isAway(s)
+          : a === 'limit' ? wipOf(s) >= wipLimit
+            : true
+  const baseMatch = (s: any) => {
     if (needle && !((s.name || '').toLowerCase().includes(needle)
       || (s.matric || '').toLowerCase().includes(needle)
       || (s.email || '').toLowerCase().includes(needle)
       || (s.student_skills || []).some((ss: any) => (ss.skills?.skill_name || '').toLowerCase().includes(needle)))) return false
     if (skillFilter && levelOf(s, skillFilter) < minLevel) return false
-    if (avail === 'free' && (wipOf(s) > 0 || isAway(s))) return false
-    if (avail === 'room' && (wipOf(s) >= wipLimit || isAway(s))) return false
-    if (avail === 'away' && !isAway(s)) return false
-    if (avail === 'limit' && wipOf(s) < wipLimit) return false
     return true
-  })
+  }
+  // Each availability pill counts who you'd see if you picked it, with search and skill kept.
+  const availCount = (a: Avail) => filteredStudents.filter(s => baseMatch(s) && availOk(a, s)).length
+  const searched = filteredStudents.filter(s => baseMatch(s) && availOk(avail, s))
 
   // Default: clustered, newest group block on top, then by name within each group.
   const shownStudents = searched.slice().sort((a, b) => {
@@ -421,7 +426,7 @@ export default function People() {
 
         {/* Team at a glance */}
         {insights && (
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-6">
+          <div className="tm-strip grid-cols-2 xl:grid-cols-4 mb-6">
             <StatTile label="Free right now" accent="emerald" value={<>{freeCount}<span className="text-base text-faint font-normal"> / {students.length}</span></>}
               sub={`${limitCount} at their limit${awayCount ? ` · ${awayCount} away` : ''}`} />
             <StatTile label="Team load" accent={insights.summary.utilisation >= 0.85 ? 'rose' : insights.summary.utilisation >= 0.6 ? 'amber' : 'indigo'}
@@ -654,15 +659,17 @@ export default function People() {
               </select>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs" style={FAINT}>Availability</span>
-            <select value={avail} onChange={e => setAvail(e.target.value as Avail)} className="tm-select-sm">
-              <option value="all">Anyone</option>
-              <option value="free">Free (no active tasks)</option>
-              <option value="room">Has room (under {wipLimit})</option>
-              <option value="limit">At limit</option>
-              <option value="away">Away</option>
-            </select>
+          <div className="flex items-center gap-2 max-w-full overflow-x-auto">
+            <span className="text-xs shrink-0" style={FAINT}>Availability</span>
+            <div className="tm-pills !flex-nowrap" role="group" aria-label="Filter by availability">
+              {([['all', 'Anyone', null, ''], ['free', 'Free', 'var(--tm-emerald)', 'No active tasks'], ['room', 'Has room', 'var(--tm-sky)', `Under ${wipLimit} active tasks`],
+                ['limit', 'At limit', 'var(--tm-rose)', `${wipLimit} or more active tasks`], ['away', 'Away', 'var(--tm-neutral)', 'Marked as away']] as [Avail, string, string | null, string][]).map(([k, label, c, hint]) => (
+                <button key={k} onClick={() => setAvail(k)} aria-pressed={avail === k} className="tm-pill" title={hint || undefined}>
+                  {c && <span className="dot" style={{ background: c }} />}{label}
+                  {!loading && <span className="n">{availCount(k)}</span>}
+                </button>
+              ))}
+            </div>
           </div>
           {view === 'roster' && (
             <div className="flex items-center gap-2">

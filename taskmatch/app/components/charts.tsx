@@ -55,7 +55,7 @@ export function TrendTile({ label, value, change, goodWhen = 'up', sub, spark, h
     <Card className="p-5 h-full" hover={!!href}>
       <p className="text-[13px] font-medium text-muted">{label}</p>
       <div className="flex items-baseline gap-2 mt-2">
-        <p className="text-3xl font-semibold tracking-tight tabular-nums text-fg">{value}</p>
+        <p className="tm-stat-num text-[2rem] leading-tight text-fg">{value}</p>
         {change != null && (
           <span className="text-xs font-medium tabular-nums inline-flex items-center gap-0.5" style={{ color: tone }}>
             {flat ? 'no change' : <>

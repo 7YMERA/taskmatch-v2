@@ -8,24 +8,24 @@
    ─────────────────────────────────────────────────────────── */
 :root {
   /* Base canvas (dark is the default theme) */
-  --tm-bg: #09090b;
-  --tm-bg-subtle: #0f0f12;
-  --tm-bg-elev: #131316;
-  --tm-bg-sidebar: #0c0c0f;
+  --tm-bg: #09090f;
+  --tm-bg-subtle: #0e0e16;
+  --tm-bg-elev: #13131c;
+  --tm-bg-sidebar: #0c0c13;
 
   /* Surfaces (cards, inputs, hovers) */
-  --tm-surface-1: #131316;
-  --tm-surface-2: #1b1b20;
-  --tm-surface-3: #24242a;
+  --tm-surface-1: #13131c;
+  --tm-surface-2: #1b1b27;
+  --tm-surface-3: #252533;
 
   /* Borders */
-  --tm-border: #232329;
-  --tm-border-strong: #33333b;
+  --tm-border: #242433;
+  --tm-border-strong: #353549;
 
   /* Text */
-  --tm-text: #f4f4f5;
-  --tm-text-muted: #a1a1aa;
-  --tm-text-faint: #71717a;
+  --tm-text: #f3f3f9;
+  --tm-text-muted: #a4a4ba;
+  --tm-text-faint: #77778e;
 
   /* Brand — one primary colour, used with restraint */
   --tm-primary: #6d6af8;
@@ -51,7 +51,14 @@
   --tm-chart-4: #f59e0b;
   --tm-chart-5: #ef4444;
   --tm-chart-6: #71717a;
-  --tm-track: #1f1f25;
+  --tm-track: #20202c;
+
+  /* Warm second accent: the amber of the logo's overlap. Used for highlights,
+     "new" markers and the odd underline, never for body text on a tint. */
+  --tm-warm: #f5b94a;
+  --tm-warm-soft: rgba(245, 185, 74, 0.16);
+  --tm-glow: rgba(124, 121, 255, 0.13);
+  --tm-wash-o: .55;
 
   --tm-danger: #ef4444;
   --tm-danger-hover: #dc2626;
@@ -76,21 +83,21 @@
 
 /* ─── Light theme ─── applied when <html data-theme="light"> */
 [data-theme="light"] {
-  --tm-bg: #fafafa;
-  --tm-bg-subtle: #f4f4f5;
+  --tm-bg: #f7f7fb;
+  --tm-bg-subtle: #f0f0f7;
   --tm-bg-elev: #ffffff;
   --tm-bg-sidebar: #ffffff;
 
   --tm-surface-1: #ffffff;
-  --tm-surface-2: #f4f4f5;
-  --tm-surface-3: #e9e9ec;
+  --tm-surface-2: #f0f0f7;
+  --tm-surface-3: #e6e6f0;
 
-  --tm-border: #e4e4e7;
-  --tm-border-strong: #d4d4d8;
+  --tm-border: #e2e2ec;
+  --tm-border-strong: #d0d0de;
 
-  --tm-text: #09090b;
-  --tm-text-muted: #52525b;
-  --tm-text-faint: #71717a;
+  --tm-text: #0b0b15;
+  --tm-text-muted: #4f4f66;
+  --tm-text-faint: #6b6b82;
 
   --tm-primary: #5048e5;
   --tm-primary-hover: #4338ca;
@@ -113,7 +120,12 @@
   --tm-chart-4: #d97706;
   --tm-chart-5: #dc2626;
   --tm-chart-6: #a1a1aa;
-  --tm-track: #ececef;
+  --tm-track: #eaeaf2;
+
+  --tm-warm: #9a5b06;
+  --tm-warm-soft: #fbeccc;
+  --tm-glow: rgba(80, 72, 229, 0.08);
+  --tm-wash-o: .5;
 
   --tm-shadow-sm: 0 1px 2px rgba(9, 9, 11, 0.05);
   --tm-shadow: 0 12px 32px -8px rgba(9, 9, 11, 0.14), 0 0 0 1px var(--tm-border);
@@ -138,7 +150,10 @@
   --color-primary: var(--tm-primary);
   --color-primary-text: var(--tm-primary-text);
   --color-primary-soft: var(--tm-primary-soft);
+  --color-warm: var(--tm-warm);
+  --color-warm-soft: var(--tm-warm-soft);
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
@@ -159,6 +174,10 @@ body, .tm-card, .tm-input, .tm-btn, aside {
 }
 
 * { box-sizing: border-box; }
+
+/* Headlines use the display face; body copy stays on Geist. */
+h1, h2, .font-display { font-family: var(--font-display); }
+h1, h2 { text-wrap: balance; }
 
 ::selection { background: var(--tm-primary-soft); color: var(--tm-text); }
 
@@ -207,9 +226,10 @@ option { background-color: var(--tm-bg-elev); color: var(--tm-text); }
 .tm-accent-text { color: var(--tm-primary-text); }
 
 /* Page header */
-.tm-page-title { font-size: 1.5rem; line-height: 2rem; font-weight: 600; letter-spacing: -0.02em; color: var(--tm-text); }
+.tm-page-title { font-family: var(--font-display); font-size: 1.625rem; line-height: 2rem; font-weight: 700; letter-spacing: -0.025em; color: var(--tm-text); }
 .tm-page-sub { font-size: .875rem; color: var(--tm-text-muted); margin-top: 2px; }
-.tm-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: .02em; color: var(--tm-primary-text); }
+/* Small mono label above a heading ("PRODUCT", "HOW IT WORKS") */
+.tm-eyebrow { font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 11.5px; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; color: var(--tm-primary-text); }
 
 /* Buttons */
 .tm-btn {
@@ -353,4 +373,106 @@ option { background-color: var(--tm-bg-elev); color: var(--tm-text); }
   font-size: 12px; line-height: 1.45;
   background: var(--tm-surface-1); border: 1px solid var(--tm-border);
   border-radius: var(--tm-r-md); box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+
+/* ───────────────────────────────────────────────────────────
+   Portfolio-inspired extras (Nov 2026)
+   ─────────────────────────────────────────────────────────── */
+
+/* Warm highlighter under a word, and a pulsing "live" dot */
+.tm-mark { background: linear-gradient(transparent 62%, var(--tm-warm-soft) 62%); padding: 0 .06em; border-radius: 2px; }
+.tm-pulse { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--tm-warm); flex: none; display: inline-block; }
+.tm-pulse::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--tm-warm); opacity: 0; animation: tm-ping 2s ease-out infinite; }
+@keyframes tm-ping { 0% { transform: scale(.5); opacity: .8 } 100% { transform: scale(1.6); opacity: 0 } }
+
+/* Numbers strip: a row of stat tiles joined into one bordered bar.
+   Each cell draws its own right and bottom rule; the frame clips the outer ones,
+   so a half-empty last row never shows a stray line. */
+.tm-strip { display: grid; gap: 0 !important; background: var(--tm-surface-1); border: 1px solid var(--tm-border); border-radius: var(--tm-r-lg); overflow: hidden; box-shadow: var(--tm-shadow-glow); }
+.tm-strip > * { box-shadow: 1px 0 0 var(--tm-border), 0 1px 0 var(--tm-border); min-width: 0; }
+.tm-strip .tm-card { border: 0; border-radius: 0; box-shadow: none; background: transparent; height: 100%; }
+.tm-strip > a { transition: background .15s; }
+.tm-strip > a:hover { background: var(--tm-surface-2); }
+.tm-stat-num { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+
+/* Cursor glow: a soft light follows the pointer inside a card, and the border
+   lights up near it. --mx / --my are set by components/CursorGlow.tsx. */
+.tm-card-hover, .tm-glow { position: relative; isolation: isolate; }
+.tm-card-hover::before, .tm-glow::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+  opacity: 0; transition: opacity .25s;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), var(--tm-glow), transparent 60%);
+}
+.tm-card-hover::after, .tm-glow::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  opacity: 0; transition: opacity .25s;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--tm-primary) 70%, transparent), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0); mask-clip: content-box, border-box; mask-composite: exclude;
+}
+.tm-card-hover:hover::before, .tm-card-hover:hover::after,
+.tm-glow:hover::before, .tm-glow:hover::after { opacity: 1; }
+@media (hover: none) { .tm-card-hover::before, .tm-card-hover::after, .tm-glow::before, .tm-glow::after { display: none; } }
+
+/* Landing backdrop: dot grid fading out, plus a slow colour wash in the logo's
+   three colours. The wash is plain gradients moved with transform (no live blur). */
+.tm-dots-bg {
+  background-image: radial-gradient(var(--tm-border-strong) 1px, transparent 1.3px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 65% 55% at 50% 22%, #000 25%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 55% at 50% 22%, #000 25%, transparent 75%);
+}
+.tm-wash { position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 30%, #000 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 30%, #000 25%, transparent 78%); }
+.tm-wash::before { content: ""; position: absolute; top: -10%; bottom: 10%; left: -20%; width: 160%; opacity: var(--tm-wash-o);
+  background:
+    radial-gradient(36% 46% at 22% 38%, color-mix(in srgb, #6d6af8 38%, transparent), transparent 70%),
+    radial-gradient(30% 40% at 52% 22%, color-mix(in srgb, #f5b94a 26%, transparent), transparent 70%),
+    radial-gradient(34% 44% at 80% 40%, color-mix(in srgb, #10b981 24%, transparent), transparent 70%);
+  will-change: transform; animation: tm-wash-drift 40s ease-in-out infinite alternate; }
+[data-still]::before { animation: none; }
+@keyframes tm-wash-drift { from { transform: translate3d(0, 0, 0) } to { transform: translate3d(-18%, 4%, 0) } }
+
+/* Headline that blurs in word by word, once */
+.tm-reveal .w { display: inline-block; animation: tm-blur-in .7s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i) * 70ms + 80ms); }
+@keyframes tm-blur-in { from { opacity: 0; filter: blur(10px); transform: translateY(14px) } to { opacity: 1; filter: none; transform: none } }
+
+/* Filter pills with counts */
+.tm-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; padding: 5px 11px; border-radius: 999px;
+  border: 1px solid var(--tm-border); background: var(--tm-surface-1); color: var(--tm-text-muted); cursor: pointer; white-space: nowrap;
+  transition: border-color .15s, color .15s, background .15s; }
+.tm-pill:hover { color: var(--tm-text); border-color: color-mix(in srgb, var(--tm-primary) 55%, var(--tm-border)); }
+.tm-pill[aria-pressed="true"] { background: var(--tm-text); color: var(--tm-bg); border-color: var(--tm-text); }
+.tm-pill .n { font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 11px; opacity: .7; font-variant-numeric: tabular-nums; }
+.tm-pill .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
+.tm-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Before/after slider (landing: v1 final-year project vs v2) */
+.tm-ba { position: relative; overflow: hidden; aspect-ratio: 16 / 10; --pos: 50%; user-select: none; touch-action: pan-y; background: var(--tm-surface-2); }
+.tm-ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.tm-ba .before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.tm-ba .handle { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; background: var(--tm-warm); transform: translateX(-1px); pointer-events: none; }
+.tm-ba .knob { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; border-radius: 50%; background: var(--tm-warm); color: #1a1205; display: grid; place-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+.tm-ba .tag { position: absolute; top: 10px; font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(12, 12, 20, .8); color: #fff; pointer-events: none; }
+.tm-ba .tag.l { left: 10px } .tm-ba .tag.r { right: 10px }
+.tm-ba input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+.tm-ba:has(input:focus-visible) { outline: 2px solid var(--tm-ring); outline-offset: -4px; }
+
+/* Bottom dock on phones (replaces the slide-out menu as the main way around) */
+.tm-dock { position: fixed; z-index: 40; left: 50%; transform: translateX(-50%); bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  display: flex; gap: 2px; padding: 5px; border-radius: 20px;
+  background: color-mix(in srgb, var(--tm-bg-elev) 88%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border: 1px solid var(--tm-border); box-shadow: var(--tm-shadow); max-width: calc(100vw - 20px); }
+.tm-dock a, .tm-dock button { display: grid; justify-items: center; gap: 2px; padding: 6px 9px; min-width: 54px; border-radius: 14px; color: var(--tm-text-muted);
+  font-size: 10.5px; font-weight: 600; transition: transform .15s, color .15s, background .15s; }
+.tm-dock a:active, .tm-dock button:active { transform: scale(.92); }
+.tm-dock [aria-current="page"] { color: var(--tm-primary-text); background: var(--tm-primary-soft); }
+@media (min-width: 768px) { .tm-dock { display: none; } }
+@media (max-width: 767px) { body:has(.tm-dock) { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tm-wash::before, .tm-reveal .w, .tm-pulse::after { animation: none !important; }
+  .tm-card-hover::before, .tm-card-hover::after, .tm-glow::before, .tm-glow::after { transition: none; }
 }

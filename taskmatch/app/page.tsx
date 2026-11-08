@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from './lib/supabase'
 import Link from 'next/link'
-import { AmbientBackground, Button, Card, Icon, Logo } from './components/ui'
+import { AmbientBackground, Button, Card, Icon, Logo, RevealWords } from './components/ui'
+import BeforeAfter from './components/BeforeAfter'
 import { ThemeToggle } from './lib/theme'
 
 /* ─── Small building blocks ─── */
@@ -19,7 +20,7 @@ function NavBar() {
   }, [])
 
   const links = [
-    ['Product', '#features'], ['How it works', '#how'], ['Why TaskMatch', '#mission'], ["What's new", '#roadmap'],
+    ['Product', '#features'], ['How it works', '#how'], ['Before & after', '#compare'], ['Why TaskMatch', '#mission'], ["What's new", '#roadmap'],
   ]
 
   return (
@@ -188,6 +189,7 @@ export default function Landing() {
 
   const roadmap = [
     { tag: 'Shipped', c: 'var(--tm-emerald)', t: 'Row-level security and verified API', d: 'Every request is checked against the signed-in user.' },
+    { tag: 'Shipped', c: 'var(--tm-emerald)', t: 'Warmer colours, display type and motion', d: 'Tinted neutrals, an amber second accent, filter pills with counts and a phone dock.' },
     { tag: 'Shipped', c: 'var(--tm-emerald)', t: 'New design system with light and dark mode', d: 'A consistent, accessible interface across the whole app.' },
     { tag: 'In progress', c: 'var(--tm-amber)', t: 'Skill evidence', d: 'Skills backed by completed work, not just self-declaration.' },
     { tag: 'Planned', c: 'var(--tm-sky)', t: 'Integrations', d: 'Pull tasks in from the tools your team already uses.' },
@@ -203,12 +205,14 @@ export default function Landing() {
         <Section className="!pt-32 sm:!pt-40 !pb-16 relative text-center">
           <div className="tm-fade-up max-w-3xl mx-auto">
             <a href="#roadmap" className="inline-flex items-center gap-2 pl-1.5 pr-3 py-1 rounded-full mb-7 text-xs transition-colors border border-line bg-surface text-muted hover:text-fg">
-              <span className="px-2 py-0.5 rounded-full text-[11px] font-medium" style={{ background: 'var(--tm-primary-soft)', color: 'var(--tm-primary-text)' }}>New</span>
-              Light and dark mode, rebuilt from the ground up
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium" style={{ background: 'var(--tm-warm-soft)', color: 'var(--tm-warm)' }}><span className="tm-pulse" style={{ width: 6, height: 6 }} />New</span>
+              Warmer colours, new type and a v1 vs v2 slider
               <Icon name="arrowRight" size={12} />
             </a>
-            <h1 className="text-4xl sm:text-6xl font-semibold tracking-[-0.035em] leading-[1.05] mb-6 text-fg">
-              Put the right people<br className="hidden sm:block" /> on the <span className="tm-accent-text">right work</span>.
+            <h1 className="tm-reveal text-4xl sm:text-6xl font-extrabold tracking-[-0.04em] leading-[1.02] mb-6 text-fg">
+              <RevealWords text="Put the right people" /><br className="hidden sm:block" />
+              <RevealWords text="on the" start={4} />
+              <span className="tm-accent-text tm-mark"><RevealWords text="right work." start={6} /></span>
             </h1>
             <p className="text-lg sm:text-xl max-w-2xl mx-auto mb-9 text-muted leading-relaxed">
               TaskMatch ranks your team against every task by skill and workload, pairs strong members with learners,
@@ -232,7 +236,7 @@ export default function Landing() {
           sub="Stop assigning by gut feel. TaskMatch makes skills and capacity visible, so every decision is backed by evidence." />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 rounded-xl overflow-hidden border border-line" style={{ gap: 1, background: 'var(--tm-border)' }}>
           {features.map(f => (
-            <div key={f.title} className="p-7 bg-surface">
+            <div key={f.title} className="tm-glow p-7 bg-surface">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-5 border border-line bg-subtle" style={{ color: 'var(--tm-primary-text)' }}>
                 <Icon name={f.icon} size={18} />
               </div>
@@ -251,7 +255,7 @@ export default function Landing() {
             {steps.map((s, i) => (
               <li key={s.t} className="relative">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold tabular-nums"
+                  <span className="font-display w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold tabular-nums"
                     style={{ background: 'var(--tm-primary)', color: 'var(--tm-primary-fg)' }}>{i + 1}</span>
                   {i < steps.length - 1 && <span className="hidden lg:block flex-1 h-px" style={{ background: 'var(--tm-border-strong)' }} />}
                 </div>
@@ -262,6 +266,13 @@ export default function Landing() {
           </ol>
         </Section>
       </div>
+
+      {/* ─── BEFORE / AFTER ─── */}
+      <Section id="compare">
+        <SectionHeading eyebrow="Before & after" title={<>From a final-year project to a <span className="tm-mark">product</span></>}
+          sub="TaskMatch began as a university final-year project. Drag the slider to see how each screen has changed since v1." />
+        <BeforeAfter />
+      </Section>
 
       {/* ─── MISSION ─── */}
       <Section id="mission">
@@ -278,7 +289,7 @@ export default function Landing() {
           </div>
           <div className="grid gap-3">
             {[['Fair', 'Work is spread by capacity, not by who says yes first.', 'scale'], ['Visible', 'Every skill, assignment and score is on the record.', 'chart'], ['Evidence-led', 'Past results shape the next match.', 'target']].map(([t, d, ic]) => (
-              <Card key={t} className="p-5 flex items-start gap-4">
+              <Card key={t} hover className="p-5 flex items-start gap-4">
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--tm-primary-soft)', color: 'var(--tm-primary-text)' }}>
                   <Icon name={ic as 'scale'} size={18} />
                 </div>
@@ -335,6 +346,7 @@ export default function Landing() {
           <div className="flex gap-6 text-sm text-muted">
             <a href="#features" className="hover:text-fg transition-colors">Product</a>
             <a href="#how" className="hover:text-fg transition-colors">How it works</a>
+            <a href="#compare" className="hover:text-fg transition-colors">Before &amp; after</a>
             <a href="#roadmap" className="hover:text-fg transition-colors">What&apos;s new</a>
             <Link href="/login" className="hover:text-fg transition-colors">Log in</Link>
           </div>

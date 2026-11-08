@@ -124,15 +124,27 @@ export function PageHeader({ title, sub, actions }: { title: React.ReactNode; su
 }
 
 /* ─── Ambient background (landing / auth screens) ───
-   A faint grid fading out from the top plus one soft brand glow. Quiet on purpose. */
+   A dot grid that fades out at the edges, over a slow colour wash in the logo's
+   indigo, amber and green. `animate={false}` keeps the wash still. */
 export function AmbientBackground({ animate = true }: { animate?: boolean }) {
-  void animate
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-      <div className="absolute inset-0 tm-grid-bg opacity-60" />
-      <div className="absolute left-1/2 -translate-x-1/2 -top-40 w-[56rem] h-[28rem] rounded-full blur-3xl"
-        style={{ background: 'var(--tm-primary-soft)' }} />
+      <div className="tm-wash" style={animate ? undefined : ({ '--tm-wash-o': 0.4 } as React.CSSProperties)} data-still={animate ? undefined : ''} />
+      <div className="absolute inset-0 tm-dots-bg" />
     </div>
+  )
+}
+
+/* ─── Headline that blurs in word by word (once, on load) ─── */
+export function RevealWords({ text, start = 0 }: { text: string; start?: number }) {
+  return (
+    <>
+      {text.split(' ').map((w, i) => (
+        <React.Fragment key={i}>
+          <span className="w" style={{ '--i': start + i } as React.CSSProperties}>{w}</span>{' '}
+        </React.Fragment>
+      ))}
+    </>
   )
 }
 
@@ -237,7 +249,7 @@ export function StatTile({ label, value, accent = 'indigo', sub }:
         <span className="w-1.5 h-1.5 rounded-full" style={{ background: c }} />
         <p className="text-[13px] font-medium text-muted">{label}</p>
       </div>
-      <p className="text-3xl font-semibold tracking-tight mt-2 tabular-nums text-fg">{value}</p>
+      <p className="tm-stat-num text-[2rem] leading-tight mt-1.5 text-fg">{value}</p>
       {sub && <p className="text-xs mt-1 text-faint">{sub}</p>}
     </Card>
   )
