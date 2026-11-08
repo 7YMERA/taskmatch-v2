@@ -112,8 +112,10 @@ Each release has a full write-up with before/after screenshots in light and dark
 
 How the two AI assistants (Claude and Kiro) split the work is in their notes on the Wiki:
 [Claude notes](https://github.com/7YMERA/taskmatch-v2/wiki/Claude-Notes) and [Kiro notes](https://github.com/7YMERA/taskmatch-v2/wiki/Kiro-Notes).
-Each assistant starts a new chat by reading [CLAUDES-CORNER.md](CLAUDES-CORNER.md), a one-page
-handoff log they update in every pull request, so they don't have to re-read the whole project.
+Both assistants share one handoff page, [AGENT-CORNER.md](AGENT-CORNER.md): where the project
+stands, what the last agent left unfinished, a map of the code, settled decisions, known gotchas
+and one line per pull request. Each new chat reads that page first instead of the whole project,
+and each pull request updates it, so Claude and Kiro can pick up each other's work cheaply.
 
 ---
 
@@ -159,7 +161,7 @@ supabase/         Database scripts, run in order (see "The database" below)
 .github/          CI workflow
 vercel.json       Vercel setup: the site and the API as two services in one project
 AGENTS.md         Working rules for the two AI assistants (branches, Wiki, commit identity, no secrets)
-CLAUDES-CORNER.md Short handoff log the AI assistants read first: current state, code map, decisions, gotchas
+AGENT-CORNER.md   Shared handoff log Claude and Kiro read first: state, unfinished work, code map, decisions
 ```
 
 Release write-ups, screenshots, the roadmap and the assistants' notes live on the

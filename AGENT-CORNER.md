@@ -1,14 +1,12 @@
-# Claude's corner
+# Agent corner
 
-The short handoff log for AI assistants (Claude Code and Kiro). **Read this first** in a new
+The shared handoff log for the two AI assistants on this repo: **Claude** (Claude Code, cloud and
+personal laptop) and **Kiro** (KiroCrew, work laptop). **Read this first** in a new
 chat instead of re-reading the whole repo, then open only the files your task needs.
 **Update it last**, in the same pull request as your change (see "How to update" at the bottom).
 
-Keep it under ~200 lines. Long write-ups belong on the Wiki
-([Changelog](https://github.com/7YMERA/taskmatch-v2/wiki/Changelog),
-[Claude notes](https://github.com/7YMERA/taskmatch-v2/wiki/Claude-Notes),
-[Kiro notes](https://github.com/7YMERA/taskmatch-v2/wiki/Kiro-Notes)). Public repo: no passwords,
-keys, tokens or demo logins here.
+Keep it under ~200 lines so it stays cheap to read. Public repo: no passwords, keys, tokens or demo
+logins here.
 
 ## Current state (2026-11-08)
 
@@ -19,9 +17,14 @@ keys, tokens or demo logins here.
   numbers strips, cursor glow, v1/v2 slider, phone dock).
 - Shelved: the Claude AI assist feature (`taskmatch-api/ai.py`, `AISuggest.tsx`). Don't build on it.
 
+## Handoff (next agent starts here)
+
+What the last agent left half-done or queued. Replace it, don't append to it.
+
+- Nothing in progress. Review and merge order for open PRs: #36, #37, then #38.
+
 ## Owner to-dos (not code)
 
-- Publish the staged Wiki bundles in the project files (`wiki-move/*.bundle`).
 - Rotate the demo admin password now that #35 is live (keep it only in the laptop's gitignored env).
 - Suspend the old Render API (fallback only), then delete `taskmatch/vercel.json`.
 
@@ -70,11 +73,23 @@ cd taskmatch && npx tsc --noEmit && npm run lint  # frontend
 - `.tm-card` has backdrop-filter + hover transform, which traps `fixed` overlays inside it; disable both while a menu is open.
 - `maybeSingle()` mocks need an array of exactly one row.
 
+## Who does what
+
+| | Claude | Kiro |
+|---|---|---|
+| Runs on | Cloud sessions and the personal laptop | KiroCrew on the work laptop |
+| Reads rules from | `CLAUDE.md` (includes `AGENTS.md`) | `.kiro/steering/repo-rules.md` (points to `AGENTS.md`) |
+| Extra tools | `.mcp.json` servers (once #36 merges) | Own `.kiro/settings`; doesn't get `.mcp.json` |
+| Commit as | `7YMERA` no-reply address, set per repo | Same, set per repo only (never globally on the work laptop) |
+
+If you pick up work the other agent started, read its last log line and the Handoff section, then
+its branch's commits, before changing anything.
+
 ## Log (newest first, one line each)
 
 | Date | PR | Who | What |
 |---|---|---|---|
-| 2026-11-08 | #38 | Claude | Added this file; AGENTS.md now says read it first and update it last. |
+| 2026-11-08 | #38 | Claude | Added this agent corner; AGENTS.md and Kiro's steering say read it first and update it last. |
 | 2026-11-07 | #37 | Claude | Portfolio-inspired restyle (open). |
 | 2026-10-29 | #36 | Claude | Root `.mcp.json` for Claude Code sessions (open). |
 | 2026-10-27 | #35 | Claude | Try the demo with no login. |
@@ -92,5 +107,6 @@ cd taskmatch && npx tsc --noEmit && npm run lint  # frontend
 At the end of each pull request, in the same branch:
 
 1. Add one line at the top of **Log** (date, PR, who, what).
-2. Fix anything in **Current state**, **Owner to-dos**, **Map**, **Decisions** or **Gotchas** that your change made wrong.
-3. Delete lines that are no longer true rather than adding "update:" notes. Fold old log rows together once the table passes ~20 rows.
+2. Rewrite **Handoff** with anything you left unfinished, or "Nothing in progress".
+3. Fix anything in **Current state**, **Owner to-dos**, **Map**, **Decisions** or **Gotchas** that your change made wrong.
+4. Delete lines that are no longer true rather than adding "update:" notes. Fold old log rows together once the table passes ~20 rows.
